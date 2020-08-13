@@ -10,6 +10,12 @@ const userSchema = new Schema(
         ref: 'Task',
       },
     ],
+    assignedTasks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Task',
+      },
+    ],
   },
   { timestamps: true }
 );

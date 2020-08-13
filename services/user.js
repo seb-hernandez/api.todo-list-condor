@@ -17,7 +17,7 @@ const getByUsername = async (username) => {
   return user;
 };
 
-const getToken = async (userId) => {
+const generateToken = async (userId) => {
   const token = await jwt.sign({ userId }, 'jwtsecretkey');
   return token;
 };
@@ -32,13 +32,32 @@ const create = async (username, password) => {
     username,
     password: hashedPassword,
   });
-  const token = await getToken(user.id);
+  const token = await generateToken(user.id);
   await user.save();
   return { userId: user.id, token };
+};
+
+const assignTask = async (userId, taskId) => {
+  const user = await getById(userId);
+  user.assignedTasks.push(taskId);
+  await user.save();
+  return user;
+};
+
+const unassignTask = async (userId, taskId) => {
+  const user = await getById(userId);
+  const index = user.assignedTasks.indexOf(taskId);
+  if (index > -1) {
+    user.assignedTasks.splice(index, 1);
+  }
+  await user.save();
+  return user;
 };
 
 module.exports = {
   getAll,
   getById,
   create,
+  assignTask,
+  unassignTask,
 };
