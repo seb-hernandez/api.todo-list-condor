@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { get } = require('mongoose');
 
 const getAll = async () => {
   const users = await User.find();
@@ -40,5 +39,6 @@ const create = async (username, password) => {
 
 module.exports = {
   getAll,
+  getById,
   create,
 };
