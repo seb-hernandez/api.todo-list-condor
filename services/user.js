@@ -25,7 +25,7 @@ const generateToken = async (userId) => {
 const create = async (username, password) => {
   const existingUser = await getByUsername(username);
   if (existingUser) {
-    throw new Error('User already exists');
+    throw new Error('User already exists.');
   }
   const hashedPassword = await bcrypt.hash(password, 12);
   const user = new User({
@@ -34,7 +34,20 @@ const create = async (username, password) => {
   });
   const token = await generateToken(user.id);
   await user.save();
-  return { userId: user.id, token };
+  return { user: { ...user._doc, password: null }, token };
+};
+
+const login = async (username, password) => {
+  const user = await getByUsername(username);
+  if (!user) {
+    throw new Error('User does not exist.');
+  }
+  const isEqual = await bcrypt.compare(password, user.password);
+  if (!isEqual) {
+    throw new Error('Password is incorrect.');
+  }
+  const token = await generateToken(user.id);
+  return { user: { ...user._doc, password: null }, token };
 };
 
 const assignTask = async (userId, taskId) => {
@@ -58,6 +71,7 @@ module.exports = {
   getAll,
   getById,
   create,
+  login,
   assignTask,
   unassignTask,
 };
