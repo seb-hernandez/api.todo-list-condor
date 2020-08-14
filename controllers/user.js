@@ -10,6 +10,19 @@ const getAll = async (req, res) => {
   }
 };
 
+const getCurrent = async (req, res) => {
+  try {
+    const { isAuth, userId } = req;
+    if (!isAuth) {
+      throw new Error('Unauthenticated');
+    }
+    const result = await userService.getCurrent(userId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
 const create = async (req, res) => {
   try {
     const {
@@ -40,4 +53,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { getAll, create, login };
+module.exports = { getAll, getCurrent, create, login };

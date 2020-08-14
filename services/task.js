@@ -3,7 +3,7 @@ const userService = require('./user');
 const removeItemFromArr = require('../utils/removeItemfromArr');
 
 const getAll = async () => {
-  const tasks = await Task.find();
+  const tasks = await Task.find().sort({ createdAt: -1 });
   return tasks;
 };
 
@@ -17,16 +17,16 @@ const removeById = async (taskId) => {
   return task;
 };
 
-const create = async (userId, title, description) => {
+const create = async (userId, title) => {
   const user = await userService.getById(userId);
   const task = new Task({
     title,
-    description,
     creator: userId,
   });
   user.createdTasks.push(task.id);
   user.save();
   await task.save();
+  // const allTasks = await getAll();
   return task;
 };
 

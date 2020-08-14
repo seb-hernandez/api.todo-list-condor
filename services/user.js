@@ -22,6 +22,11 @@ const generateToken = async (userId) => {
   return token;
 };
 
+const getCurrent = async (userId) => {
+  const user = await getById(userId);
+  return user;
+};
+
 const create = async (username, password) => {
   const existingUser = await getByUsername(username);
   if (existingUser) {
@@ -69,6 +74,7 @@ const unassignTask = async (userId, taskId) => {
 
 module.exports = {
   getAll,
+  getCurrent,
   getById,
   create,
   login,

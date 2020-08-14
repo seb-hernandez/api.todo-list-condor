@@ -2,6 +2,7 @@ require('dotenv-flow').config();
 const express = require('express');
 const morgan = require('morgan');
 const connectDB = require('./db');
+const isAuth = require('./middleware/isAuth');
 const apiRoutes = require('./routes');
 const app = express();
 
@@ -27,7 +28,7 @@ app.use(express.json({ extended: false }));
 app.use(morgan('dev'));
 
 // middlewares
-// app.use(isAuth);
+app.use(isAuth);
 
 // routes
 app.use('/api', apiRoutes);

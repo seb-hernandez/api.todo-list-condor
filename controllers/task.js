@@ -13,9 +13,14 @@ const getAll = async (req, res) => {
 const create = async (req, res) => {
   try {
     const {
-      body: { userId, title, description },
+      body: { title },
+      isAuth,
+      userId,
     } = req;
-    const result = await taskService.create(userId, title, description);
+    if (!isAuth) {
+      throw new Error('Unauthenticated');
+    }
+    const result = await taskService.create(userId, title);
     res.status(200).json(result);
   } catch (error) {
     console.error(error.message);
