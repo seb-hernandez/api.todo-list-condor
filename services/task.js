@@ -1,6 +1,5 @@
 const Task = require('../models/Task');
 const userService = require('./user');
-const removeItemFromArr = require('../utils/removeItemfromArr');
 
 const getAll = async () => {
   const tasks = await Task.find().sort({ createdAt: -1 });
@@ -31,12 +30,9 @@ const create = async (userId, title) => {
 };
 
 const update = async (taskId, input) => {
-  const task = await Task.findOneAndUpdate(
-    { _id: taskId },
-    { $set: input },
-    { new: true }
-  );
-  return task;
+  await Task.findOneAndUpdate({ _id: taskId }, { $set: input }, { new: true });
+  const allTasks = await getAll();
+  return allTasks;
 };
 
 const assignUser = async (taskId, userId) => {
@@ -44,7 +40,8 @@ const assignUser = async (taskId, userId) => {
   task.assignedUsers.push(userId);
   userService.assignTask(userId, taskId);
   await task.save();
-  return task;
+  const allTasks = await getAll();
+  return allTasks;
 };
 
 const unassignUser = async (taskId, userId) => {
@@ -55,7 +52,8 @@ const unassignUser = async (taskId, userId) => {
   }
   userService.unassignTask(userId, taskId);
   await task.save();
-  return task;
+  const allTasks = await getAll();
+  return allTasks;
 };
 
 const remove = async (taskId) => {
@@ -70,7 +68,8 @@ const remove = async (taskId) => {
     user.assignedTasks.splice(index2, 1);
   }
   await user.save();
-  return task;
+  const tasks = await getAll();
+  return tasks;
 };
 
 module.exports = {

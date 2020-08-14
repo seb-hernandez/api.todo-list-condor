@@ -15,7 +15,10 @@ app.set('PORT', process.env.PORT || 5000);
 // cors
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,GET,PATCH,OPTIONS');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'POST,GET,PATCH,DELETE,OPTIONS'
+  );
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);

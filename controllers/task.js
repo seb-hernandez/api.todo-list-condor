@@ -34,7 +34,7 @@ const update = async (req, res) => {
   try {
     const {
       params: { id: taskId },
-      body: { input },
+      body: input,
     } = req;
     const result = await taskService.update(taskId, input);
     res.status(200).json(result);
