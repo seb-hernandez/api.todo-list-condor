@@ -33,7 +33,6 @@ const create = async (userId, title) => {
   user.createdTasks.push(task.id);
   user.save();
   await task.save();
-  // const allTasks = await getAll();
   return task;
 };
 
@@ -53,29 +52,29 @@ const assignUser = async (taskId, userId) => {
 };
 
 const unassignUser = async (taskId, userId) => {
+  await removeAssignedUser(taskId, userId);
+  userService.unassignTask(userId, taskId);
+  const allTasks = await getAll();
+  return allTasks;
+};
+
+const removeAssignedUser = async (taskId, userId) => {
   const task = await getById(taskId);
   const index = task.assignedUsers.indexOf(userId);
   if (index > -1) {
     task.assignedUsers.splice(index, 1);
   }
-  userService.unassignTask(userId, taskId);
   await task.save();
-  const allTasks = await getAll();
-  return allTasks;
+  return task;
 };
 
 const remove = async (taskId) => {
   const task = await removeById(taskId);
-  const user = await userService.getById(task.creator);
-  const index = user.createdTasks.indexOf(taskId);
-  if (index > -1) {
-    user.createdTasks.splice(index, 1);
-  }
-  const index2 = user.assignedTasks.indexOf(taskId);
-  if (index > -1) {
-    user.assignedTasks.splice(index2, 1);
-  }
-  await user.save();
+  userService.removeCreatedTask(task.creator, taskId);
+  const assignedUsers = await userService.getManyById(task.assignedUsers);
+  assignedUsers.map((user) => {
+    userService.unassignTask(user.id, taskId);
+  });
   const tasks = await getAll();
   return tasks;
 };

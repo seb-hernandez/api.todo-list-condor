@@ -12,6 +12,11 @@ const getById = async (userId) => {
   return user;
 };
 
+const getManyById = async (userIds) => {
+  const users = await User.find({ _id: { $in: userIds } });
+  return users;
+};
+
 const getByUsername = async (username) => {
   const user = await User.findOne({ username });
   return user;
@@ -72,6 +77,16 @@ const unassignTask = async (userId, taskId) => {
   return user;
 };
 
+const removeCreatedTask = async (userId, taskId) => {
+  const user = await getById(userId);
+  const index = user.createdTasks.indexOf(taskId);
+  if (index > -1) {
+    user.createdTasks.splice(index, 1);
+  }
+  await user.save();
+  return user;
+};
+
 module.exports = {
   getAll,
   getCurrent,
@@ -80,4 +95,6 @@ module.exports = {
   login,
   assignTask,
   unassignTask,
+  getManyById,
+  removeCreatedTask,
 };
