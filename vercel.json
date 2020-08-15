@@ -10,8 +10,5 @@
     "MONGO_URI": "@mongo-uri-condor",
     "JWT_SECRET": "@jwt-secret-condor"
   },
-  "routes": [
-    { "src": "/auth/.*", "dest": "/index.js" },
-    { "src": "/api/.*", "dest": "/index.js" }
-  ]
+  "routes": [{ "src": "/api/.*", "dest": "/index.js" }]
 }
