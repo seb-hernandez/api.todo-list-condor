@@ -6,7 +6,24 @@ const getAll = async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const getByTitle = async (req, res) => {
+  try {
+    const {
+      body: { title },
+    } = req;
+    const result = await taskService.getByTitle(title);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
@@ -93,4 +110,12 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAll, create, update, assignUser, unassignUser, remove };
+module.exports = {
+  getAll,
+  getByTitle,
+  create,
+  update,
+  assignUser,
+  unassignUser,
+  remove,
+};

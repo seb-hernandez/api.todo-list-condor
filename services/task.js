@@ -11,6 +11,14 @@ const getById = async (taskId) => {
   return task;
 };
 
+const getByTitle = async (title) => {
+  const task = await Task.find({ title }).collation({
+    locale: 'en',
+    strength: 2,
+  });
+  return task;
+};
+
 const removeById = async (taskId) => {
   const task = await Task.findByIdAndRemove(taskId);
   return task;
@@ -74,6 +82,7 @@ const remove = async (taskId) => {
 
 module.exports = {
   getAll,
+  getByTitle,
   create,
   update,
   assignUser,
