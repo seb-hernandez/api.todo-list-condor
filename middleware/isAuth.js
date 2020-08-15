@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
   }
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, 'jwtsecretkey');
+    decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
     req.isAuth = false;
     return next();
