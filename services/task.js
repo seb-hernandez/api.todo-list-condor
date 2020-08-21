@@ -31,7 +31,7 @@ const create = async (userId, title) => {
     creator: userId,
   });
   user.createdTasks.push(task.id);
-  user.save();
+  await user.save();
   await task.save();
   return task;
 };
@@ -45,7 +45,7 @@ const update = async (taskId, input) => {
 const assignUser = async (taskId, userId) => {
   const task = await getById(taskId);
   task.assignedUsers.push(userId);
-  userService.assignTask(userId, taskId);
+  await userService.assignTask(userId, taskId);
   await task.save();
   const allTasks = await getAll();
   return allTasks;
@@ -53,7 +53,7 @@ const assignUser = async (taskId, userId) => {
 
 const unassignUser = async (taskId, userId) => {
   await removeAssignedUser(taskId, userId);
-  userService.unassignTask(userId, taskId);
+  await userService.unassignTask(userId, taskId);
   const allTasks = await getAll();
   return allTasks;
 };
@@ -70,7 +70,7 @@ const removeAssignedUser = async (taskId, userId) => {
 
 const remove = async (taskId) => {
   const task = await removeById(taskId);
-  userService.removeCreatedTask(task.creator, taskId);
+  await userService.removeCreatedTask(task.creator, taskId);
   const assignedUsers = await userService.getManyById(task.assignedUsers);
   assignedUsers.map((user) => {
     userService.unassignTask(user.id, taskId);
